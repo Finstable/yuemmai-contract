@@ -1,4 +1,3 @@
-import { parseEther } from "@ethersproject/units";
 import hre, { ethers } from "hardhat";
 import {
   TestAdminKAP20Router__factory,
@@ -8,10 +7,9 @@ import {
   TestKKUB__factory,
   TestKUSDT__factory,
   TestKYCBitkubChainV2__factory,
-  YESToken__factory,
+  TestNextTransferRouter__factory,
 } from "../../typechain";
 import addressUtils from "../../utils/addressUtils";
-import { getSigners } from "../utils/getSigners";
 
 export const deployTestKYC = async () => {
   const TestKYCBitkubChainV2 = (await ethers.getContractFactory(
@@ -58,6 +56,27 @@ export const deployTestAdminKAP20Router = async () => {
   console.log("Deployed AdminKAP20Router at: ", adminKAP20Router.address);
 
   return adminKAP20Router;
+};
+
+export const deployTestTransferRouter = async () => {
+  const addressList = await addressUtils.getAddressList(hre.network.name);
+  const TestNextTransferRouter = (await ethers.getContractFactory(
+    "TestNextTransferRouter"
+  )) as TestNextTransferRouter__factory;
+  const transferRouter = await TestNextTransferRouter.deploy(
+    addressList["AdminProjectRouter"],
+    addressList["AdminKAP20Router"],
+    addressList["KKUB"],
+    addressList["Committee"],
+    [addressList["KUSDT"]]
+  );
+  await addressUtils.saveAddresses(hre.network.name, {
+    TransferRouter: transferRouter.address,
+  });
+  await transferRouter.deployTransaction.wait();
+  console.log("Deployed TransferRouter at: ", transferRouter.address);
+
+  return transferRouter;
 };
 
 export const deployTestKKUB = async () => {
@@ -134,8 +153,9 @@ export const deployTestEnv = async () => {
 
   // Token admin
   await deployTestAdminKAP20Router();
+  await deployTestTransferRouter();
 
   // AMM
   await deployTestSwapFactory();
-    await deployTestSwapRouter();
+  await deployTestSwapRouter();
 };

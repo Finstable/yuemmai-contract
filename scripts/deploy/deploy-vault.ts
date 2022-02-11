@@ -18,7 +18,6 @@ export const deployVault = async () => {
 
   const admin = owner.address;
   const superAdmin = owner.address;
-  const acceptedKYCLevel = 4;
 
   const yesVault = await YESVault.connect(owner).deploy(
     addressList["YESController"],
@@ -29,10 +28,7 @@ export const deployVault = async () => {
     admin,
     superAdmin,
     addressList["YuemmaiCallHelper"],
-    addressList["AdminKAP20Router"],
-    addressList["Committee"],
-    addressList["KYC"],
-    acceptedKYCLevel
+    addressList["TransferRouter"]
   );
 
   await yesVault.deployTransaction.wait();

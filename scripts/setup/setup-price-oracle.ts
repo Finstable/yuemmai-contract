@@ -16,10 +16,10 @@ export const setupPriceOracle = async () => {
     owner
   );
 
-  // await slidingWindowOracle
-  //   .update(addressList["KKUB"], addressList["YES"])
-  //   .then((tx) => tx.wait());
-  // console.log("Updated KKUB-YES price");
+  await slidingWindowOracle
+    .update(addressList["KKUB"], addressList["YES"])
+    .then((tx) => tx.wait());
+  console.log("Updated KKUB-YES price");
 
   await slidingWindowOracle
     .update(addressList["KUSDT"], addressList["YES"])

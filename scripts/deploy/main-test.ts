@@ -6,20 +6,18 @@ import { deployMarketImpl } from "./deploy-marketImpl";
 import { deployOracle } from "./deploy-oracle";
 import { deployVault } from "./deploy-vault";
 import { deployKAP20Lending } from "./deploy-kap20lending";
-import { deployBorrowLimit } from "./deploy-borrow-limit";
-import { deployYESAdmin } from "./deploy-yes-admin";
 import { deployTestEnv } from "./deploy-test-env";
 
 const deployLendingContracts = async () => {
   await deployKAP20Lending("KUSDT");
-  // await deployKUBLending();
+  await deployKUBLending();
 };
 
 async function main() {
   // only test
   // await deployTestEnv();
 
-  await deployYESToken();
+  // await deployYESToken();
 
   await deployController();
   await deployOracle();
