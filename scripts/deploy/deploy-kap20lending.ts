@@ -15,7 +15,7 @@ export const deployKAP20Lending = async (underlyingSymbol: string) => {
   const name = `${underlyingSymbol} Lending Token`;
   const symbol = `L-${underlyingSymbol}`;
   const decimals = 18;
-  const acceptedKYCLevel = 0;
+  const acceptedKYCLevel = 4;
 
   const kap20Lending = await KAP20Lending.connect(owner).deploy({
     underlyingToken: addressList[underlyingSymbol],

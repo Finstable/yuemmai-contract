@@ -15,14 +15,14 @@ const deployLendingContracts = async () => {
 };
 
 async function main() {
-  await deployYESToken();
+  // await deployYESToken();
 
   // await deployController();
   // await deployOracle();
   // await deployInterest();
   // await deployMarketImpl();
   // await deployVault();
-  // await deployLendingContracts();
+  await deployLendingContracts();
 }
 
 main()

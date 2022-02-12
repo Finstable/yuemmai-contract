@@ -13,7 +13,7 @@ async function main() {
     owner
   );
 
-  const sender = owner.address;
+  const sender = "0xcdCc562088F99f221B0C3BB1EDcFD5A9646D0B25";
 
   const amount = parseEther("10");
 

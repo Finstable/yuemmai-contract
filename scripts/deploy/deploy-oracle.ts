@@ -21,7 +21,7 @@ export const deployOracle = async () => {
   const slidingWindowOracle = await SlidingWindowOracle.connect(owner).deploy(
     addressList["SwapFactory"],
     timeUtils.duration.minutes(10),
-    10
+    2
   );
   await slidingWindowOracle.deployTransaction.wait();
   console.log("Deployed sliding window oracle: ", slidingWindowOracle.address);

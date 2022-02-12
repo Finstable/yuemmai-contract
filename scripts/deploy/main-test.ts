@@ -15,9 +15,9 @@ const deployLendingContracts = async () => {
 
 async function main() {
   // only test
-  // await deployTestEnv();
+  await deployTestEnv();
 
-  // await deployYESToken();
+  await deployYESToken();
 
   await deployController();
   await deployOracle();

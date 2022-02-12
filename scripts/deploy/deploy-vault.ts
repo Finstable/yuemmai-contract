@@ -14,7 +14,7 @@ export const deployVault = async () => {
   )) as YESVault__factory;
 
   // const releaseTime = await time.latest() + time.duration.years(1);
-  const releaseTime = Math.floor(new Date("2022-02-03 00:00").valueOf() / 1000);
+  const releaseTime = Math.floor(new Date("2022-11-14 00:00").valueOf() / 1000);
 
   const admin = owner.address;
   const superAdmin = owner.address;
