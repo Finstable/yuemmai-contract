@@ -188,6 +188,7 @@ export const deployVault = async (
   pendingRelease = timeUtils.duration.years(1),
   admin: string,
   superAdmin: string,
+  committee: string,
   callHelper: string,
   transferRouter: string
 ) => {
@@ -204,6 +205,7 @@ export const deployVault = async (
     releaseTime,
     admin,
     superAdmin,
+    committee,
     callHelper,
     transferRouter,
   );

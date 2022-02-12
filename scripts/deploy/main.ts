@@ -21,7 +21,7 @@ async function main() {
   // await deployOracle();
   // await deployInterest();
   // await deployMarketImpl();
-  // await deployVault();
+  await deployVault();
   await deployLendingContracts();
 }
 

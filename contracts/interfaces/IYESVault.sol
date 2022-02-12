@@ -31,6 +31,8 @@ interface IYESVault {
 
     function admin() external view returns (address);
 
+    function transferRouter() external view returns (address);
+
     function airdrop(address beneficiary, uint256 amount) external;
 
     function setBorrowLimit(address account, uint256 newAmount) external;
@@ -61,6 +63,8 @@ interface IYESVault {
     function setMarketImpl(address newMarketImpl) external;
 
     function setMarket(address newMarket) external;
+
+    function setTransferRouter(address newTransferRouter) external;
 
     function setAdmin(address newAdmin) external;
 }

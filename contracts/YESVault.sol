@@ -22,6 +22,7 @@ contract YESVault is
     ReleaseTimelock,
     Exponential,
     SuperAdmin,
+    Committee,
     BKNextCallHelper
 {
     string public constant override PROJECT = "bitkub-next-yuemmai";
@@ -52,6 +53,7 @@ contract YESVault is
         uint256 releaseTime_,
         address admin_,
         address superAdmin_,
+        address committee_,
         address callHelper_,
         address transferRouter_
     )
@@ -65,6 +67,8 @@ contract YESVault is
         _setTransferRouter(transferRouter_);
         _setMarket(market_);
         _setAdmin(admin_);
+
+        committee = committee_;
     }
 
     /*** BK Next helpers ***/
@@ -223,6 +227,10 @@ contract YESVault is
         emit NewYESToken(address(oldYESToken), newYESToken);
     }
 
+    function setTransferRouter(address newTransferRouter) external override onlyCommittee {
+       _setTransferRouter(newTransferRouter);
+    }
+
     function _setTransferRouter(address newTransferRouter) private {
         _transferRouter = INextTransferRouter(newTransferRouter);
     }
@@ -303,5 +311,9 @@ contract YESVault is
 
     function admin() external view override returns (address) {
         return _admin;
+    }
+
+    function transferRouter() external view override returns (address) {
+        return address(_transferRouter);
     }
 }

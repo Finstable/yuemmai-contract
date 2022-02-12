@@ -168,6 +168,10 @@ abstract contract LendingGetter is LendingStorage {
         return address(_lToken);
     }
 
+    function transferRouter() external view override returns (address) {
+        return address(_transferRouter);
+    }
+
     function interestRateModel() external view override returns (address) {
         return address(_interestRateModel);
     }

@@ -27,6 +27,7 @@ export const deployVault = async () => {
     releaseTime,
     admin,
     superAdmin,
+    addressList["Committee"],
     addressList["YuemmaiCallHelper"],
     addressList["TransferRouter"]
   );

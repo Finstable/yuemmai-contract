@@ -145,6 +145,8 @@ interface ILending {
 
     function reservePool() external view returns (address payable);
 
+    function transferRouter() external view returns (address);
+
     /*** Admin Functions ***/
 
     function _setController(address newController) external returns (uint256);
@@ -166,6 +168,10 @@ interface ILending {
         returns (uint256);
 
     function _setReservePool(address payable newReservePool)
+        external
+        returns (uint256);
+
+    function setTransferRouter(address newTransferRouter)
         external
         returns (uint256);
 

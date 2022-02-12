@@ -181,6 +181,7 @@ export const deployYESSystem = async () => {
     pendingRelease,
     admin,
     superAdmin,
+    committee,
     callHelper,
     transferRouter.address
   );

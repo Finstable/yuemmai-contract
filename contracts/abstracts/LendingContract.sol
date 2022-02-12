@@ -6,6 +6,7 @@ import "./LendingSetter.sol";
 import "../interfaces/IYESVault.sol";
 import "../modules/kyc/KYCHandler.sol";
 import "../modules/kyc/interfaces/IKYCBitkubChain.sol";
+import "../modules/committee/Committee.sol";
 
 abstract contract LendingContract is LendingSetter {
     constructor(ConstructorArgs memory args)
@@ -33,6 +34,7 @@ abstract contract LendingContract is LendingSetter {
         _transferRouter = INextTransferRouter(args.transferRouter);
 
         underlyingToken = args.underlyingToken;
+        committee = args.committee;
         IKAP20(underlyingToken).totalSupply();
 
         _lToken = new LToken(

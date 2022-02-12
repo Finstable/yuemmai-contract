@@ -12,6 +12,7 @@ import "../modules/security/ReentrancyGuard.sol";
 import "./SuperAdmin.sol";
 import "./BKNextCallHelper.sol";
 import "../LToken.sol";
+import "../modules/committee/Committee.sol";
 
 abstract contract LendingStorage is
     ILending,
@@ -19,7 +20,8 @@ abstract contract LendingStorage is
     Exponential,
     ReentrancyGuard,
     SuperAdmin,
-    BKNextCallHelper
+    BKNextCallHelper,
+    Committee
 {
     string public constant override PROJECT = "bitkub-next-yuemmai";
     bool public constant override isLContract = true;

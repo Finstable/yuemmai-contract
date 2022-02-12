@@ -251,6 +251,16 @@ abstract contract LendingSetter is LendingInterest {
         return _setReservePoolFresh(newReservePool);
     }
 
+    function setTransferRouter(address newTransferRouter)
+        external
+        override
+        onlyCommittee
+        returns (uint256)
+    {
+        _transferRouter = INextTransferRouter(newTransferRouter);
+        return uint256(Error.NO_ERROR);
+    }
+
     function _setReservePoolFresh(address payable newReservePool)
         internal
         returns (uint256)
@@ -274,11 +284,7 @@ abstract contract LendingSetter is LendingInterest {
     function pause() external override onlySuperAdmin returns (uint256) {
         uint256 error = accrueInterest();
         if (error != uint256(Error.NO_ERROR)) {
-            return
-                fail(
-                    Error(error),
-                    FailureInfo.PAUSE_ACCRUE_INTEREST_FAILED
-                );
+            return fail(Error(error), FailureInfo.PAUSE_ACCRUE_INTEREST_FAILED);
         }
         _lToken.pause();
         return uint256(Error.NO_ERROR);
@@ -288,10 +294,7 @@ abstract contract LendingSetter is LendingInterest {
         uint256 error = accrueInterest();
         if (error != uint256(Error.NO_ERROR)) {
             return
-                fail(
-                    Error(error),
-                    FailureInfo.UNPAUSE_ACCRUE_INTEREST_FAILED
-                );
+                fail(Error(error), FailureInfo.UNPAUSE_ACCRUE_INTEREST_FAILED);
         }
         _lToken.unpause();
         return uint256(Error.NO_ERROR);
