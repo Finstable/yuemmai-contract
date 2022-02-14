@@ -233,6 +233,6 @@ export const addSwapLiquidity = async () => {
   // KUB
   // await Promise.all([
   // await addLiquidityKUB(owner, yesToken, swapRouter);
-  await buyTokenWithKUB(signer, yesToken);
+  // await buyTokenWithKUB(signer, yesToken);
   // ])
 };
