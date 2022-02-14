@@ -19,7 +19,7 @@ import { getSigners } from "../utils/getSigners";
 
 const poolReserves = {
   KUBYES: [
-    hre.ethers.utils.parseEther("10"), // 1 KUB = 12.93 USD
+    hre.ethers.utils.parseEther("204454"), // 1 KUB = 12.93 USD
     hre.ethers.utils.parseEther("2500000"), // 1 YES = 26.74 THB = 0.8 USD
   ],
   KUSDTYES: [
@@ -33,7 +33,7 @@ const poolReserves = {
 };
 
 const inputs = {
-  KUB: parseEther("53000"), 
+  KUB: parseEther("53000"),
   KUSDT: parseEther("250000"),
   KUSDC: parseEther("250000"),
 };
