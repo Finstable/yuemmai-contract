@@ -5,6 +5,7 @@ import {
   TestDiamonFactory__factory,
   TestDiamonRouter__factory,
   TestKKUB__factory,
+  TestKUSDC__factory,
   TestKUSDT__factory,
   TestKYCBitkubChainV2__factory,
   TestNextTransferRouter__factory,
@@ -110,6 +111,26 @@ export const deployTestKUSDT = async () => {
   return kusdt;
 };
 
+export const deployTestKUSDC = async () => {
+  const addressList = await addressUtils.getAddressList(hre.network.name);
+  const TestKUSDC = (await ethers.getContractFactory(
+    "TestKUSDC"
+  )) as TestKUSDC__factory;
+  const acceptedKYCLevel = 0;
+  const kusdc = await TestKUSDC.deploy(
+    addressList["KYC"],
+    addressList["AdminProjectRouter"],
+    addressList["Committee"],
+    addressList["TransferRouter"],
+    acceptedKYCLevel
+  );
+  await addressUtils.saveAddresses(hre.network.name, { KUSDC: kusdc.address });
+  await kusdc.deployTransaction.wait();
+  console.log("Deployed KUSDC at: ", kusdc.address);
+
+  return kusdc;
+};
+
 export const deployTestSwapFactory = async () => {
   const TestDiamonFactory = (await ethers.getContractFactory(
     "TestDiamonFactory"
@@ -144,18 +165,19 @@ export const deployTestSwapRouter = async () => {
 
 export const deployTestEnv = async () => {
   //BK env
-  await deployTestKYC();
-  await deployTestAdminProjectRouter();
+  // await deployTestKYC();
+  // await deployTestAdminProjectRouter();
 
   // Tokens
   await deployTestKKUB();
   await deployTestKUSDT();
+  await deployTestKUSDC();
 
   // Token admin
   await deployTestAdminKAP20Router();
   await deployTestTransferRouter();
 
   // AMM
-  await deployTestSwapFactory();
-  await deployTestSwapRouter();
+  // await deployTestSwapFactory();
+  // await deployTestSwapRouter();
 };

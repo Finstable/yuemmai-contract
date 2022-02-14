@@ -1,38 +1,57 @@
+import { constants } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import hre from "hardhat";
-import { TestKUSDC__factory, TestKUSDT__factory } from "../../typechain";
+import {
+  TestKUSDC__factory,
+  TestKUSDT__factory,
+  YESToken,
+  YESToken__factory,
+} from "../../typechain";
 import addressUtils from "../../utils/addressUtils";
 import { getSigners } from "../utils/getSigners";
 
-export const prepareLiquidity = async () => {
+export const checkBalances = async () => {
   const addressList = await addressUtils.getAddressList(hre.network.name);
   const [owner, signer] = await getSigners();
 
-  const requiredTokens = parseEther("1000000");
   const kusdt = TestKUSDT__factory.connect(addressList["KUSDT"], owner);
   const kusdc = TestKUSDC__factory.connect(addressList["KUSDC"], owner);
+  const yesToken = YESToken__factory.connect(addressList["YES"], owner);
 
-  await kusdt.mint(owner.address, requiredTokens).then((tx) => tx.wait());
+  // Owner
   console.log(
-    "Minted KUSDT to Owner: ",
+    "Owner YES token: ",
+    await yesToken.balanceOf(owner.address).then((res) => formatEther(res))
+  );
+
+  console.log(
+    "Owner KUSDT: ",
     await kusdt.balanceOf(owner.address).then((res) => formatEther(res))
   );
 
-  await kusdc.mint(owner.address, requiredTokens).then((tx) => tx.wait());
   console.log(
-    "Minted KUSDC to Owner: ",
+    "Owner KUSDC: ",
     await kusdc.balanceOf(owner.address).then((res) => formatEther(res))
   );
 
-  await kusdt.mint(signer.address, requiredTokens).then((tx) => tx.wait());
   console.log(
-    "Minted KUSDT to Signer: ",
+    "Owner KUB: ",
+    await signer.provider.getBalance(owner.address).then((res) => formatEther(res))
+  );
+
+  // Signer
+  console.log(
+    "Signer KUSDT: ",
     await kusdt.balanceOf(signer.address).then((res) => formatEther(res))
   );
 
-  await kusdc.mint(signer.address, requiredTokens).then((tx) => tx.wait());
   console.log(
-    "Minted KUSDC to Signer: ",
+    "Signer KUSDC: ",
     await kusdc.balanceOf(signer.address).then((res) => formatEther(res))
+  );
+
+  console.log(
+    "Signer KUB: ",
+    await signer.provider.getBalance(signer.address).then((res) => formatEther(res))
   );
 };

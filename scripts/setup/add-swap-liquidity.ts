@@ -1,35 +1,47 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { constants } from "ethers";
-import { formatEther } from "ethers/lib/utils";
+import { formatEther, parseEther } from "ethers/lib/utils";
 import hre from "hardhat";
 import {
   YESToken__factory,
   YESToken,
-  KAP20__factory,
   KAP20,
-  TestDiamonFactory__factory,
   TestDiamonRouter,
   TestDiamonRouter__factory,
   TestKKUB__factory,
   TestKUSDT,
   TestKUSDT__factory,
+  KAP20__factory,
 } from "../../typechain";
 import addressUtils from "../../utils/addressUtils";
 import timeUtils from "../../utils/timeUtils";
 import { getSigners } from "../utils/getSigners";
 
-// Public sale YES = 1,200,000 YES. Split into 5 parts, 240,000 per part
-// Alpha test: Public sale = 40,000,000. split  into 4 parts, 10,000,000 YES per part
-
 const poolReserves = {
   KUBYES: [
     hre.ethers.utils.parseEther("10"), // 1 KUB = 12.93 USD
-    hre.ethers.utils.parseEther("161.5"), // 1 YES = 26.74 THB = 0.8 USD
+    hre.ethers.utils.parseEther("2500000"), // 1 YES = 26.74 THB = 0.8 USD
   ],
   KUSDTYES: [
     hre.ethers.utils.parseEther("1000000"), // 1 KUSDT = 33.43 THB = 1 USD
     hre.ethers.utils.parseEther("1250000"), // 1 YES = 26.74 THB = 0.8 USD
   ],
+  KUSDCYES: [
+    hre.ethers.utils.parseEther("1000000"), // 1 KUSDT = 33.43 THB = 1 USD
+    hre.ethers.utils.parseEther("1250000"), // 1 YES = 26.74 THB = 0.8 USD
+  ],
+};
+
+const inputs = {
+  KUB: parseEther("53000"), 
+  KUSDT: parseEther("250000"),
+  KUSDC: parseEther("250000"),
+};
+
+const outputs = {
+  KUB: parseEther("503300"),
+  KUSDT: parseEther("240000"),
+  KUSDC: parseEther("240000"),
 };
 
 const addLiquidity = async (
@@ -39,12 +51,6 @@ const addLiquidity = async (
   swapRouter: TestDiamonRouter,
   key: string
 ) => {
-  await token
-    .connect(signer)
-    .approve(swapRouter.address, hre.ethers.constants.MaxUint256)
-    .then((tx) => tx.wait());
-  console.log(`${key}: Approve to Swap router success`);
-
   const pairToken = key.replace("YES", "");
 
   console.log(
@@ -63,8 +69,6 @@ const addLiquidity = async (
     await yesToken.balanceOf(signer.address).then((res) => formatEther(res)),
     "YES"
   );
-
-  console.log("Token addr: ", token.address);
 
   await swapRouter
     .connect(signer)
@@ -124,12 +128,89 @@ const addLiquidityKUB = async (
   console.log("Add liquidity KUB-YES success");
 };
 
+const buyToken = async (
+  signer: SignerWithAddress,
+  yesToken: YESToken,
+  tokenName: string
+) => {
+  const addressList = await addressUtils.getAddressList(hre.network.name);
+
+  const deadline = timeUtils.now() + timeUtils.duration.minutes(10);
+
+  const swapRouter = TestDiamonRouter__factory.connect(
+    addressList["SwapRouter"],
+    signer
+  );
+  const tokenAddr = addressList[tokenName];
+
+  console.log(
+    inputs[tokenName],
+    outputs[tokenName],
+    [tokenAddr, yesToken.address],
+    signer.address,
+    deadline,
+    {
+      gasPrice: 50000000000, // 50 GWEI
+    }
+  );
+
+  await swapRouter
+    .swapExactTokensForTokens(
+      inputs[tokenName],
+      outputs[tokenName],
+      [tokenAddr, yesToken.address],
+      signer.address,
+      deadline,
+      {
+        gasPrice: 50000000000, // 50 GWEI
+      }
+    )
+    .then((tx) => tx.wait());
+
+  console.log(
+    "YES balance: ",
+    await yesToken.balanceOf(signer.address).then((res) => formatEther(res))
+  );
+};
+
+const buyTokenWithKUB = async (
+  signer: SignerWithAddress,
+  yesToken: YESToken
+) => {
+  const addressList = await addressUtils.getAddressList(hre.network.name);
+
+  const deadline = timeUtils.now() + timeUtils.duration.minutes(10);
+
+  const swapRouter = TestDiamonRouter__factory.connect(
+    addressList["SwapRouter"],
+    signer
+  );
+  const tokenAddr = addressList["KKUB"];
+  await swapRouter
+    .swapExactETHForTokens(
+      outputs["KUB"],
+      [tokenAddr, yesToken.address],
+      signer.address,
+      deadline,
+      {
+        value: inputs["KUB"],
+        gasPrice: 50000000000, // 50 GWEI
+      }
+    )
+    .then((tx) => tx.wait());
+
+  console.log(
+    "Trade success! YES balance: ",
+    await yesToken.balanceOf(signer.address).then((res) => formatEther(res))
+  );
+};
+
 export const addSwapLiquidity = async () => {
   const addressList = await addressUtils.getAddressList(hre.network.name);
-  const [owner] = await getSigners();
+  const [owner, signer] = await getSigners();
 
   const kusdt = await TestKUSDT__factory.connect(addressList["KUSDT"], owner);
-  // const kusdc = await KAP20.attach(addressList["KUSDC"]);
+  const kusdc = await TestKUSDT__factory.connect(addressList["KUSDC"], owner);
   const yesToken = await YESToken__factory.connect(addressList["YES"], owner);
 
   const swapRouter = await TestDiamonRouter__factory.connect(
@@ -137,14 +218,21 @@ export const addSwapLiquidity = async () => {
     owner
   );
 
-  await yesToken
-    .connect(owner)
-    .approve(swapRouter.address, hre.ethers.constants.MaxUint256)
-    .then((tx) => tx.wait());
-  console.log("Approve YES to Swap router success");
+  // KUSDC
+  // await Promise.all([
+  await addLiquidity(owner, kusdc, yesToken, swapRouter, "KUSDCYES");
+  await buyToken(signer, yesToken, "KUSDC");
+  // ]);
 
+  // KUSDT
+  // await Promise.all([
   await addLiquidity(owner, kusdt, yesToken, swapRouter, "KUSDTYES");
-  // await addLiquidity(owner, kusdc, yesToken, swapRouter, "KUSDCYES");
+  await buyToken(signer, yesToken, "KUSDT");
+  // ]);
 
-  await addLiquidityKUB(owner, yesToken, swapRouter);
+  // KUB
+  // await Promise.all([
+  // await addLiquidityKUB(owner, yesToken, swapRouter);
+  await buyTokenWithKUB(signer, yesToken);
+  // ])
 };
