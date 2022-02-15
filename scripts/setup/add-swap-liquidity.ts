@@ -40,7 +40,7 @@ const inputs = {
 
 const outputs = {
   KUB: parseEther("503300"),
-  KUSDT: parseEther("240000"),
+  KUSDT: parseEther("200000"),
   KUSDC: parseEther("240000"),
 };
 
@@ -154,18 +154,24 @@ const buyToken = async (
     }
   );
 
-  await swapRouter
-    .swapExactTokensForTokens(
-      inputs[tokenName],
-      outputs[tokenName],
-      [tokenAddr, yesToken.address],
-      signer.address,
-      deadline,
-      {
-        gasPrice: 50000000000, // 50 GWEI
-      }
-    )
-    .then((tx) => tx.wait());
+  const outs = await swapRouter.getAmountsOut(inputs[tokenName], [tokenAddr, yesToken.address])
+
+  console.log(outs);
+
+  // await swapRouter
+  //   .swapExactTokensForTokens(
+  //     inputs[tokenName],
+  //     outputs[tokenName],
+  //     [tokenAddr, yesToken.address],
+  //     signer.address,
+  //     deadline,
+  //     {
+  //       gasPrice: 50000000000, // 50 GWEI
+  //     }
+  //   )
+  //   .then((tx) => tx.wait());
+
+  
 
   console.log(
     "YES balance: ",
@@ -220,8 +226,8 @@ export const addSwapLiquidity = async () => {
 
   // KUSDC
   // await Promise.all([
-  await addLiquidity(owner, kusdc, yesToken, swapRouter, "KUSDCYES");
-  await buyToken(signer, yesToken, "KUSDC");
+  // await addLiquidity(owner, kusdc, yesToken, swapRouter, "KUSDCYES");
+  // await buyToken(signer, yesToken, "KUSDC");
   // ]);
 
   // KUSDT

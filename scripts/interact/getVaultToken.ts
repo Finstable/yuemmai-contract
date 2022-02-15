@@ -1,6 +1,5 @@
-import { formatUnits } from "@ethersproject/units";
 import hre, { ethers } from "hardhat";
-import { ERC20__factory, YESVault, YESVault__factory } from "../../typechain";
+import { YESVault__factory } from "../../typechain";
 import addressUtils from "../../utils/addressUtils";
 
 async function main() {
@@ -9,7 +8,7 @@ async function main() {
 
   const vault = await YESVault__factory.connect(addressList["YESVault"], owner);
 
-  const address = owner.address;
+  const address = "0x96BB11EEb0E21A4209F6659AdE3f0ebb40202814";
 
   console.log("Vault token: ", await vault.tokensOf(address));
 }
