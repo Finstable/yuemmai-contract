@@ -1,23 +1,7 @@
 import { constants } from "ethers";
-import { formatEther, parseEther } from "ethers/lib/utils";
-import hre, { ethers } from "hardhat";
-import {
-  KYCHandler__factory,
-  IAdminProjectRouter__factory,
-  IAdminKAP20Router__factory,
-  IKAP20__factory,
-  IUniswapRouter02__factory,
-  IUniswapV2Factory__factory,
-  KAP20__factory,
-  IUniswapV2Pair__factory,
-  IDiamonFactory__factory,
-  TestKUSDT__factory,
-  TestKUSDT,
-  TestKKUB,
-  YESToken,
-  TestDiamonRouter,
-} from "../../typechain";
-import addressUtils from "../../utils/addressUtils";
+import { parseEther } from "ethers/lib/utils";
+import { ethers } from "hardhat";
+import { TestKUSDT, YESToken, TestDiamonRouter } from "../../typechain";
 import timeUtils from "../../utils/timeUtils";
 import {
   deployController,
@@ -37,6 +21,7 @@ import {
   deployTestSwapFactory,
   deployTestSwapRouter,
   deployTestNextTransferRouter,
+  deployLocker,
 } from "./deployer";
 
 export const initialPool = {
@@ -224,6 +209,15 @@ export const deployYESSystem = async () => {
     acceptedKYCLevel
   );
 
+  const locker = await deployLocker(
+    yes.address,
+    kyc.address,
+    adminProjectRouter.address,
+    committee,
+    transferRouter.address,
+    acceptedKYCLevel
+  );
+
   // Setup Controller
   await controller.setPriceOracle(yesPriceOracle.address);
 
@@ -275,6 +269,7 @@ export const deployYESSystem = async () => {
     yesVault,
     kusdtLending,
     kubLending,
+    locker,
   };
 };
 

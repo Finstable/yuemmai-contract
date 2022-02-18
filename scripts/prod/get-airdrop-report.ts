@@ -7,6 +7,8 @@ import * as fs from "fs";
 import * as csv from "fast-csv";
 
 const DEPLOY_BLOCK = 4748679;
+const FROM = 4748679;
+const TO = FROM
 
 async function main() {
   const [owner] = await ethers.getSigners();
@@ -18,9 +20,9 @@ async function main() {
   ) as YESVaultInterface;
 
   const filter = vault.filters.Airdrop() as any;
-  const latestBlock = await ethers.provider.getBlockNumber();
-  filter.fromBlock = DEPLOY_BLOCK;
-  filter.toBlock = latestBlock;
+  // const latestBlock = await ethers.provider.getBlockNumber();
+  filter.fromBlock = FROM;
+  filter.toBlock = TO;
 
   const logs = await ethers.provider.getLogs(filter);
   const promises = logs.map(async (log) => {
@@ -46,7 +48,7 @@ async function main() {
     csvStream.write(result);
   });
 
-  fs.writeFileSync(`${__dirname}/../../reports/airdrop.csv`, out);
+  fs.writeFileSync(`${__dirname}/../../reports/airdrop${FROM}-${TO}.csv`, out);
 
   csvStream.end();
 }
