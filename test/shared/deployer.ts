@@ -296,6 +296,8 @@ export const deployKUBLending = async (
 };
 
 export const deployLocker = async (
+  startTime: number,
+  endTime: number,
   yesToken: string,
   kyc: string,
   adminRouter: string,
@@ -307,6 +309,8 @@ export const deployLocker = async (
     "YESLocker"
   )) as YESLocker__factory;
   return locker.deploy(
+    startTime,
+    endTime,
     yesToken,
     kyc,
     adminRouter,

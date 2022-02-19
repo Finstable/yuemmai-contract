@@ -1,7 +1,7 @@
 import { constants } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import { ethers } from "hardhat";
-import { TestKUSDT, YESToken, TestDiamonRouter } from "../../typechain";
+import { TestKUSDT, YESToken, TestDiamonRouter, YESTicket__factory } from "../../typechain";
 import timeUtils from "../../utils/timeUtils";
 import {
   deployController,
@@ -209,7 +209,12 @@ export const deployYESSystem = async () => {
     acceptedKYCLevel
   );
 
+  const startTime = timeUtils.now();
+  const endTime = startTime + timeUtils.duration.days(1);
+
   const locker = await deployLocker(
+    startTime,
+    endTime,
     yes.address,
     kyc.address,
     adminProjectRouter.address,
@@ -217,6 +222,9 @@ export const deployYESSystem = async () => {
     transferRouter.address,
     acceptedKYCLevel
   );
+
+  const ticketAddr = await locker.yesTicket();
+  const yesTicket = YESTicket__factory.connect(ticketAddr, owner);
 
   // Setup Controller
   await controller.setPriceOracle(yesPriceOracle.address);
@@ -270,6 +278,7 @@ export const deployYESSystem = async () => {
     kusdtLending,
     kubLending,
     locker,
+    yesTicket
   };
 };
 

@@ -1,11 +1,12 @@
 import { HardhatUserConfig } from "hardhat/config";
+import { parseEther } from "ethers/lib/utils";
 import * as dotenv from "dotenv";
 
 import "@typechain/hardhat";
 import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-ethers";
 import "hardhat-contract-sizer";
-import { parseEther } from "ethers/lib/utils";
+// import "hardhat-gas-reporter";
 
 dotenv.config();
 

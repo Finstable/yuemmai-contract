@@ -1,19 +1,23 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.11;
 
-import "./modules/kap20/interfaces/IKAP20.sol";
 import "./YESTicket.sol";
-import "hardhat/console.sol";
+import "./modules/kap20/interfaces/IKAP20.sol";
 
 contract YESLocker {
-    uint public startAt;
-    uint public endAt;
-    uint public totalYesBalance;
-    uint public totalYesWithdrawn;
+    uint256 public startAt;
+    uint256 public endAt;
+    uint256 public totalYesBalance;
+    uint256 public totalYesWithdrawn;
     IKAP20 public yesToken;
     YESTicket public yesTicket;
 
+    event Locked(address sender, uint256 amount);
+    event Withdrew(address sender, uint256 amount);
+
     constructor(
+        uint256 startAt_,
+        uint256 endAt_,
         address yesToken_,
         address kyc_,
         address adminRouter_,
@@ -21,8 +25,9 @@ contract YESLocker {
         address transferRouter_,
         uint256 acceptedKYCLevel_
     ) {
-        startAt = block.timestamp;
-        endAt = block.timestamp + 10 minutes;
+        require(endAt >= startAt, "End time must be after the start time");
+        startAt = startAt_;
+        endAt = endAt_;
         yesToken = IKAP20(yesToken_);
         yesTicket = new YESTicket(
             kyc_,
@@ -33,7 +38,7 @@ contract YESLocker {
         );
     }
 
-    function _getWithdrawablePortion() private view returns (uint256) {
+    function getWithdrawablePortion() public view returns (uint256) {
         uint256 timeElapsed = block.timestamp - startAt;
         uint256 withdrawablePercent = ((timeElapsed * 100) / (endAt - startAt));
         return withdrawablePercent <= 100 ? withdrawablePercent : 100;
@@ -43,23 +48,28 @@ contract YESLocker {
         yesToken.transferFrom(msg.sender, address(this), _amount);
         totalYesBalance += _amount;
         yesTicket.mint(msg.sender, _amount);
+
+        emit Locked(msg.sender, _amount);
     }
 
-    function withdrawToken(uint _amount) external {
-        console.log("Portion: ", _getWithdrawablePortion());
+    function withdrawToken(uint256 _amount) external {
+        uint256 senderTicket = yesTicket.balanceOf(msg.sender);
+        uint256 maxSystemWithdrawableAmount = ((getWithdrawablePortion() *
+            totalYesBalance) / 100) - totalYesWithdrawn;
+        uint256 maxUserWithdrawbleAmount = senderTicket >=
+            maxSystemWithdrawableAmount
+            ? maxSystemWithdrawableAmount
+            : senderTicket;
 
-        uint256 maxSystemWithdrawableAmount = ((_getWithdrawablePortion()*totalYesBalance)/100) - totalYesWithdrawn;
-        uint maxUserWithdrawbleAmount = yesTicket.balanceOf(msg.sender) >= maxSystemWithdrawableAmount ? maxSystemWithdrawableAmount : yesTicket.balanceOf(msg.sender);
-        require(maxUserWithdrawbleAmount >= 0, "Insufficient Withdrawable Amount");
+        uint256 withdrawableAmount = (_amount + totalYesWithdrawn) >=
+            maxUserWithdrawbleAmount
+            ? maxUserWithdrawbleAmount
+            : _amount;
 
-        if(_amount + totalYesWithdrawn >= maxUserWithdrawbleAmount){
-            yesTicket.burn(msg.sender, maxUserWithdrawbleAmount);
-            totalYesWithdrawn += maxUserWithdrawbleAmount;
-            yesToken.transfer(msg.sender, maxUserWithdrawbleAmount);
-        }else {
-            yesTicket.burn(msg.sender, _amount);
-            totalYesWithdrawn += _amount;
-            yesToken.transfer(msg.sender, _amount);
-        }
+        yesTicket.burn(msg.sender, withdrawableAmount);
+        totalYesWithdrawn += withdrawableAmount;
+        yesToken.transfer(msg.sender, withdrawableAmount);
+
+        emit Withdrew(msg.sender, withdrawableAmount);
     }
 }
