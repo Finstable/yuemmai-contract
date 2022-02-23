@@ -12,6 +12,9 @@ contract YESLocker {
     IKAP20 public yesToken;
     YESTicket public yesTicket;
 
+    uint256 public constant decimals = 18;
+    uint256 public constant SHIFTER = 10 ** (decimals);
+
     event Locked(address sender, uint256 amount);
     event Withdrew(address sender, uint256 amount);
 
@@ -40,8 +43,22 @@ contract YESLocker {
 
     function getWithdrawablePortion() public view returns (uint256) {
         uint256 timeElapsed = block.timestamp - startAt;
-        uint256 withdrawablePercent = ((timeElapsed * 100) / (endAt - startAt));
-        return withdrawablePercent <= 100 ? withdrawablePercent : 100;
+        uint256 withdrawablePercent = ((timeElapsed * SHIFTER) / (endAt - startAt));
+        return withdrawablePercent <= SHIFTER ? withdrawablePercent : SHIFTER;
+    }
+
+    function getCurrentWithdrawableAmount(address sender)
+        public
+        view
+        returns (uint256)
+    {
+        uint256 senderTicket = yesTicket.balanceOf(sender);
+        uint256 maxSystemWithdrawableAmount = ((getWithdrawablePortion() *
+            totalYesBalance) / SHIFTER) - totalYesWithdrawn;
+        return
+            senderTicket >= maxSystemWithdrawableAmount
+                ? maxSystemWithdrawableAmount
+                : senderTicket;
     }
 
     function depositToken(uint256 _amount) external {
@@ -53,17 +70,13 @@ contract YESLocker {
     }
 
     function withdrawToken(uint256 _amount) external {
-        uint256 senderTicket = yesTicket.balanceOf(msg.sender);
-        uint256 maxSystemWithdrawableAmount = ((getWithdrawablePortion() *
-            totalYesBalance) / 100) - totalYesWithdrawn;
-        uint256 maxUserWithdrawbleAmount = senderTicket >=
-            maxSystemWithdrawableAmount
-            ? maxSystemWithdrawableAmount
-            : senderTicket;
+        uint256 senderWithdrawbleAmount = getCurrentWithdrawableAmount(
+            msg.sender
+        );
 
         uint256 withdrawableAmount = (_amount + totalYesWithdrawn) >=
-            maxUserWithdrawbleAmount
-            ? maxUserWithdrawbleAmount
+            senderWithdrawbleAmount
+            ? senderWithdrawbleAmount
             : _amount;
 
         yesTicket.burn(msg.sender, withdrawableAmount);
