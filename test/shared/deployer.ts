@@ -18,6 +18,7 @@ import {
   TestDiamonRouter__factory,
   TestNextTransferRouter__factory,
   YESLocker__factory,
+  Timelock__factory,
 } from "../../typechain";
 import timeUtils from "../../utils/timeUtils";
 
@@ -318,4 +319,11 @@ export const deployLocker = async (
     transferRouter,
     acceptedKYCLevel
   );
+};
+
+export const deployTimelock = async (admin: string, delay: number) => {
+  const timelock = (await ethers.getContractFactory(
+    "Timelock"
+  )) as Timelock__factory;
+  return timelock.deploy(admin, delay);
 };

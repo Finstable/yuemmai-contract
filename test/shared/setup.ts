@@ -22,6 +22,7 @@ import {
   deployTestSwapRouter,
   deployTestNextTransferRouter,
   deployLocker,
+  deployTimelock,
 } from "./deployer";
 
 export const initialPool = {
@@ -248,6 +249,9 @@ export const deployYESSystem = async () => {
   await slidingWindowOracle.update(kusdt.address, yes.address);
   await slidingWindowOracle.update(kkub.address, yes.address);
 
+  // Setup timelock
+  const timelock = await deployTimelock(owner.address, timeUtils.duration.days(1));
+
   return {
     // BK env
     committee,
@@ -278,7 +282,8 @@ export const deployYESSystem = async () => {
     kusdtLending,
     kubLending,
     locker,
-    yesTicket
+    yesTicket,
+    timelock
   };
 };
 

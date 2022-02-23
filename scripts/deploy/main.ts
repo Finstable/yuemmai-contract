@@ -6,6 +6,7 @@ import { deployOracle } from "./deploy-oracle";
 import { deployVault } from "./deploy-vault";
 import { deployKAP20Lending } from "./deploy-kap20lending";
 import { deployYESLocker } from "./deploy-yes-locker";
+import { deployTimelock } from "./deploy-timelock";
 
 const deployLendingContracts = async () => {
   await deployKAP20Lending("KUSDT");
@@ -21,7 +22,8 @@ async function main() {
   // await deployVault();
   // await deployLendingContracts();
 
-  await deployYESLocker();
+  // await deployYESLocker();
+  await deployTimelock();
 }
 
 main()
