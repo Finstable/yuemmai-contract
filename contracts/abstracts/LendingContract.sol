@@ -256,9 +256,9 @@ abstract contract LendingContract is LendingSetter {
                 );
         }
 
-        doTransferOut(user, vars.withdrawAmount, method);
-
         _lToken.burn(user, vars.withdrawTokens);
+
+        doTransferOut(user, vars.withdrawAmount, method);
 
         emit Withdraw(user, vars.withdrawAmount, vars.withdrawTokens);
 
@@ -361,11 +361,11 @@ abstract contract LendingContract is LendingSetter {
                 );
         }
 
-        doTransferOut(borrower, borrowAmount, method);
-
         accountBorrows[borrower].principal = vars.accountBorrowsNew;
         accountBorrows[borrower].interestIndex = borrowIndex;
         totalBorrows = vars.totalBorrowsNew;
+
+        doTransferOut(borrower, borrowAmount, method);
 
         emit Borrow(
             borrower,
