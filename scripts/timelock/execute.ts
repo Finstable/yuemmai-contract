@@ -17,13 +17,8 @@ async function main() {
 
   const timelock = Timelock__factory.connect(addressList["Timelock"], signer);
 
-  const yesVault = YESVault__factory.connect(addressList["YESVault"], signer);
   const controller = YESController__factory.connect(
     addressList["YESController"],
-    signer
-  );
-  const kusdtLending = KAP20Lending__factory.connect(
-    addressList["KUSDTLending"],
     signer
   );
 
@@ -34,39 +29,27 @@ async function main() {
 
   await timelock
     .executeTransaction(
-      yesVault.address,
+      controller.address,
       0,
       "",
-      yesVault.interface.encodeFunctionData("acceptSuperAdmin"),
+      controller.interface.encodeFunctionData("supportMarket", [addressList["KUBLending"]]),
       eta
     )
     .then((tx) => tx.wait());
 
-  console.log("Queue yes vault success");
+  console.log("Execute KUB Lending success");
 
   await timelock
     .executeTransaction(
       controller.address,
       0,
       "",
-      controller.interface.encodeFunctionData("acceptSuperAdmin"),
+      controller.interface.encodeFunctionData("supportMarket", [addressList["KUSDCLending"]]),
       eta
     )
     .then((tx) => tx.wait());
 
-  console.log("Queue controller success");
-
-  await timelock
-    .executeTransaction(
-      kusdtLending.address,
-      0,
-      "",
-      kusdtLending.interface.encodeFunctionData("acceptSuperAdmin"),
-      eta
-    )
-    .then((tx) => tx.wait());
-
-  console.log("Queue kusdtLending success");
+  console.log("Execute KUSDC Lending success");
 }
 
 main()
