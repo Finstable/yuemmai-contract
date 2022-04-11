@@ -18,6 +18,7 @@ import {
   TestDiamonRouter__factory,
   TestNextTransferRouter__factory,
   YESLocker__factory,
+  Timelock__factory,
 } from "../../typechain";
 import timeUtils from "../../utils/timeUtils";
 
@@ -296,6 +297,8 @@ export const deployKUBLending = async (
 };
 
 export const deployLocker = async (
+  startTime: number,
+  endTime: number,
   yesToken: string,
   kyc: string,
   adminRouter: string,
@@ -307,6 +310,8 @@ export const deployLocker = async (
     "YESLocker"
   )) as YESLocker__factory;
   return locker.deploy(
+    startTime,
+    endTime,
     yesToken,
     kyc,
     adminRouter,
@@ -314,4 +319,11 @@ export const deployLocker = async (
     transferRouter,
     acceptedKYCLevel
   );
+};
+
+export const deployTimelock = async (admin: string, delay: number) => {
+  const timelock = (await ethers.getContractFactory(
+    "Timelock"
+  )) as Timelock__factory;
+  return timelock.deploy(admin, delay);
 };

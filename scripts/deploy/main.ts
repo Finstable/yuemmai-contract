@@ -5,6 +5,8 @@ import { deployMarketImpl } from "./deploy-marketImpl";
 import { deployOracle } from "./deploy-oracle";
 import { deployVault } from "./deploy-vault";
 import { deployKAP20Lending } from "./deploy-kap20lending";
+import { deployYESLocker } from "./deploy-yes-locker";
+import { deployTimelock } from "./deploy-timelock";
 import { deployKUBLending } from "./deploy-kublending";
 
 const deployLendingContracts = async () => {
@@ -22,6 +24,10 @@ async function main() {
   // await deployMarketImpl();
   // await deployVault();
   await deployLendingContracts();
+  // await deployLendingContracts();
+
+  // await deployYESLocker();
+  // await deployTimelock();
 }
 
 main()

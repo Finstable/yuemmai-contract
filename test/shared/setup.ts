@@ -1,7 +1,7 @@
 import { constants } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import { ethers } from "hardhat";
-import { TestKUSDT, YESToken, TestDiamonRouter } from "../../typechain";
+import { TestKUSDT, YESToken, TestDiamonRouter, YESTicket__factory } from "../../typechain";
 import timeUtils from "../../utils/timeUtils";
 import {
   deployController,
@@ -22,6 +22,7 @@ import {
   deployTestSwapRouter,
   deployTestNextTransferRouter,
   deployLocker,
+  deployTimelock,
 } from "./deployer";
 
 export const initialPool = {
@@ -209,7 +210,12 @@ export const deployYESSystem = async () => {
     acceptedKYCLevel
   );
 
+  const startTime = timeUtils.now();
+  const endTime = startTime + timeUtils.duration.days(1);
+
   const locker = await deployLocker(
+    startTime,
+    endTime,
     yes.address,
     kyc.address,
     adminProjectRouter.address,
@@ -217,6 +223,9 @@ export const deployYESSystem = async () => {
     transferRouter.address,
     acceptedKYCLevel
   );
+
+  const ticketAddr = await locker.yesTicket();
+  const yesTicket = YESTicket__factory.connect(ticketAddr, owner);
 
   // Setup Controller
   await controller.setPriceOracle(yesPriceOracle.address);
@@ -239,6 +248,9 @@ export const deployYESSystem = async () => {
 
   await slidingWindowOracle.update(kusdt.address, yes.address);
   await slidingWindowOracle.update(kkub.address, yes.address);
+
+  // Setup timelock
+  const timelock = await deployTimelock(owner.address, timeUtils.duration.days(1));
 
   return {
     // BK env
@@ -270,6 +282,8 @@ export const deployYESSystem = async () => {
     kusdtLending,
     kubLending,
     locker,
+    yesTicket,
+    timelock
   };
 };
 
