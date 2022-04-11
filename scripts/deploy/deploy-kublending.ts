@@ -15,7 +15,7 @@ export const deployKUBLending = async () => {
   const name = "KUB Lending Token";
   const symbol = "L-KUB";
   const decimals = 18;
-  const acceptedKYCLevel = 0;
+  const acceptedKYCLevel = 4;
 
   const kubLending = await KUBLending.connect(owner).deploy({
     underlyingToken: addressList["KKUB"],
