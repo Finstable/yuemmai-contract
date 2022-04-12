@@ -22,34 +22,47 @@ async function main() {
     signer
   );
 
-  const eta = 1649738526;
+  // const eta = 1649738526;
+  const eta = 1649894400;
   const now = timeUtils.now();
 
   console.log({ eta, now, waitFor: eta - now });
 
+  // await timelock
+  //   .executeTransaction(
+  //     controller.address,
+  //     0,
+  //     "",
+  //     controller.interface.encodeFunctionData("supportMarket", [addressList["KUBLending"]]),
+  //     eta
+  //   )
+  //   .then((tx) => tx.wait());
+
+  // console.log("Execute KUB Lending success");
+
+  // await timelock
+  //   .executeTransaction(
+  //     controller.address,
+  //     0,
+  //     "",
+  //     controller.interface.encodeFunctionData("supportMarket", [addressList["KUSDCLending"]]),
+  //     eta
+  //   )
+  //   .then((tx) => tx.wait());
+
+  // console.log("Execute KUSDC Lending success");
+
   await timelock
     .executeTransaction(
       controller.address,
       0,
       "",
-      controller.interface.encodeFunctionData("supportMarket", [addressList["KUBLending"]]),
+      controller.interface.encodeFunctionData("setCollateralFactor", [parseEther("0.5")]),
       eta
     )
     .then((tx) => tx.wait());
 
-  console.log("Execute KUB Lending success");
-
-  await timelock
-    .executeTransaction(
-      controller.address,
-      0,
-      "",
-      controller.interface.encodeFunctionData("supportMarket", [addressList["KUSDCLending"]]),
-      eta
-    )
-    .then((tx) => tx.wait());
-
-  console.log("Execute KUSDC Lending success");
+  console.log("Execute set collateral factor success");
 }
 
 main()

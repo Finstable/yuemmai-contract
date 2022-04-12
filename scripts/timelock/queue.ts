@@ -22,32 +22,46 @@ async function main() {
     signer
   );
 
-  const eta = timeUtils.now() + timeUtils.duration.days(1) + timeUtils.duration.minutes(5);
+  // const eta = timeUtils.now() + timeUtils.duration.days(1) + timeUtils.duration.minutes(5);
+  const eta = Math.floor(new Date("2022-04-14").valueOf() / 1000);
   console.log({ eta });
 
+  // await timelock
+  //   .queueTransaction(
+  //     controller.address,
+  //     0,
+  //     "",
+  //     controller.interface.encodeFunctionData("supportMarket", [addressList["KUBLending"]]),
+  //     eta
+  //   )
+  //   .then((tx) => tx.wait());
+
+  // console.log("Queue KUB Lending success");
+
+  // await timelock
+  //   .queueTransaction(
+  //     controller.address,
+  //     0,
+  //     "",
+  //     controller.interface.encodeFunctionData("supportMarket", [addressList["KUSDCLending"]]),
+  //     eta
+  //   )
+  //   .then((tx) => tx.wait());
+
+  // console.log("Queue KUSDC Lending success");
+
+  // // TODO: uncomment code below
   await timelock
     .queueTransaction(
       controller.address,
       0,
       "",
-      controller.interface.encodeFunctionData("supportMarket", [addressList["KUBLending"]]),
+      controller.interface.encodeFunctionData("setCollateralFactor", [parseEther("0.5")]),
       eta
     )
     .then((tx) => tx.wait());
 
-  console.log("Queue KUB Lending success");
-
-  await timelock
-    .queueTransaction(
-      controller.address,
-      0,
-      "",
-      controller.interface.encodeFunctionData("supportMarket", [addressList["KUSDCLending"]]),
-      eta
-    )
-    .then((tx) => tx.wait());
-
-  console.log("Queue KUSDC Lending success");
+  console.log("Queue set collateral factor success");
 
 }
 
