@@ -1,6 +1,7 @@
 import {
   KAP20Lending,
   KAP20Lending__factory,
+  KUBLending__factory,
   Timelock__factory,
   YESController__factory,
   YESVault__factory,
@@ -17,52 +18,45 @@ async function main() {
 
   const timelock = Timelock__factory.connect(addressList["Timelock"], signer);
 
-  const controller = YESController__factory.connect(
-    addressList["YESController"],
+  const kubLending = KUBLending__factory.connect(
+    addressList["KUBLending"],
+    signer
+  );
+
+  const kusdcLending = KAP20Lending__factory.connect(
+    addressList["KUSDTLending"],
     signer
   );
 
   // const eta = 1649738526;
-  const eta = 1649894400;
+  const eta = 1650336151;
   const now = timeUtils.now();
 
   console.log({ eta, now, waitFor: eta - now });
 
-  // await timelock
-  //   .executeTransaction(
-  //     controller.address,
-  //     0,
-  //     "",
-  //     controller.interface.encodeFunctionData("supportMarket", [addressList["KUBLending"]]),
-  //     eta
-  //   )
-  //   .then((tx) => tx.wait());
-
-  // console.log("Execute KUB Lending success");
-
-  // await timelock
-  //   .executeTransaction(
-  //     controller.address,
-  //     0,
-  //     "",
-  //     controller.interface.encodeFunctionData("supportMarket", [addressList["KUSDCLending"]]),
-  //     eta
-  //   )
-  //   .then((tx) => tx.wait());
-
-  // console.log("Execute KUSDC Lending success");
-
   await timelock
     .executeTransaction(
-      controller.address,
+      kubLending.address,
       0,
       "",
-      controller.interface.encodeFunctionData("setCollateralFactor", [parseEther("0.5")]),
+      kubLending.interface.encodeFunctionData("acceptSuperAdmin"),
       eta
     )
     .then((tx) => tx.wait());
 
-  console.log("Execute set collateral factor success");
+  console.log("Execute KUB Lending success");
+
+  await timelock
+    .executeTransaction(
+      kusdcLending.address,
+      0,
+      "",
+      kusdcLending.interface.encodeFunctionData("acceptSuperAdmin"),
+      eta
+    )
+    .then((tx) => tx.wait());
+
+  console.log("Execute KUSDC Lending success");
 }
 
 main()
