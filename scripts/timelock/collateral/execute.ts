@@ -6,11 +6,11 @@ import {
   YESController,
   YESController__factory,
   YESVault__factory,
-} from "../../typechain";
-import addressUtils from "../../utils/addressUtils";
-import { getSigners } from "../utils/getSigners";
+} from "../../../typechain";
+import addressUtils from "../../../utils/addressUtils";
+import { getSigners } from "../../utils/getSigners";
 import hre from "hardhat";
-import timeUtils from "../../utils/timeUtils";
+import timeUtils from "../../../utils/timeUtils";
 import { parseEther } from "ethers/lib/utils";
 
 async function main() {

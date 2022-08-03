@@ -6,11 +6,11 @@ import {
   YESController,
   YESController__factory,
   YESVault__factory,
-} from "../../typechain";
-import addressUtils from "../../utils/addressUtils";
-import { getSigners } from "../utils/getSigners";
+} from "../../../typechain";
+import addressUtils from "../../../utils/addressUtils";
+import { getSigners } from "../../utils/getSigners";
 import hre from "hardhat";
-import timeUtils from "../../utils/timeUtils";
+import timeUtils from "../../../utils/timeUtils";
 import { parseEther } from "ethers/lib/utils";
 
 async function main() {
@@ -19,8 +19,8 @@ async function main() {
 
   const timelock = Timelock__factory.connect(addressList["Timelock"], signer);
 
-  const yesController = YESController__factory.connect(
-    addressList["YESController"],
+  const lending = KAP20Lending__factory.connect(
+    addressList["KUSDTLending"],
     signer
   );
 
@@ -33,11 +33,11 @@ async function main() {
 
   await timelock
     .queueTransaction(
-      yesController.address,
+      lending.address,
       0,
       "",
-      yesController.interface.encodeFunctionData("setCollateralFactor", [
-        parseEther("0.75"),
+      lending.interface.encodeFunctionData("_setInterestRateModel", [
+        addressList["InterestRateModel"],
       ]),
       eta
     )

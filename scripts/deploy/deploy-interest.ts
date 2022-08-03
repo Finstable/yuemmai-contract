@@ -5,10 +5,14 @@ import addressUtils from "../../utils/addressUtils";
 import { getSigners } from "../utils/getSigners";
 
 export const deployInterest = async () => {
-  const base = "0.207072885780685";
-  const multiplier = "0.0782174923623391";
-  const jumpMultiplier = "2.1209";
-  const kink = "0.8";
+  // const base = "0.207072885780685";
+  // const multiplier = "0.0782174923623391";
+  // const jumpMultiplier = "2.1209";
+  // const kink = "0.8";
+  const base = "0.1655519716";
+  const multiplier = "0.09690661001";
+  const jumpMultiplier = "0";
+  const kink = "1";
 
   const [owner] = await getSigners();
 

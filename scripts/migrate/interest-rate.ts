@@ -8,7 +8,7 @@ export const main = async () => {
   const [owner] = await getSigners();
   const addressList = await addressUtils.getAddressList(hre.network.name);
   const lending = await KAP20Lending__factory.connect(
-    addressList["KUBLending"],
+    addressList["KUSDCLending"],
     owner
   );
 
