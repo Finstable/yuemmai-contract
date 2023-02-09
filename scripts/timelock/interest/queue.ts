@@ -20,7 +20,7 @@ async function main() {
   const timelock = Timelock__factory.connect(addressList["Timelock"], signer);
 
   const lending = KAP20Lending__factory.connect(
-    addressList["KUSDTLending"],
+    addressList["KUSDCLending"],
     signer
   );
 
