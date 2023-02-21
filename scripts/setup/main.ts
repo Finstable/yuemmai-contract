@@ -11,11 +11,9 @@ async function main() {
   // await checkAllowance();
   // await prepareLiquidity();
   // await approveTokens();
-
+  // await setupYESVault();
   // await addSwapLiquidity();
-
-  await setupController();
-  await setupYESVault();
+  // await setupController();
 }
 
 main()

@@ -10,24 +10,20 @@ import { deployTimelock } from "./deploy-timelock";
 import { deployKUBLending } from "./deploy-kublending";
 
 const deployLendingContracts = async () => {
-  // await deployKAP20Lending("KUSDT");
-  await deployKUBLending();
-  await deployKAP20Lending("KUSDC");
+  // await deployKUBLending();
+  await deployKAP20Lending("KBTC");
 };
 
 async function main() {
   // await deployYESToken();
-
   // await deployController();
   // await deployOracle();
-  await deployInterest();
+  // await deployInterest();
   // await deployMarketImpl();
   // await deployVault();
-  // await deployLendingContracts();
-  // await deployLendingContracts();
-
   // await deployYESLocker();
   // await deployTimelock();
+  await deployLendingContracts();
 }
 
 main()
