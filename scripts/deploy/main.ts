@@ -11,19 +11,19 @@ import { deployKUBLending } from "./deploy-kublending";
 
 const deployLendingContracts = async () => {
   // await deployKUBLending();
-  await deployKAP20Lending("KBTC");
+  // await deployKAP20Lending("KBTC");
 };
 
 async function main() {
   // await deployYESToken();
   // await deployController();
   // await deployOracle();
-  // await deployInterest();
+  await deployInterest();
   // await deployMarketImpl();
   // await deployVault();
   // await deployYESLocker();
   // await deployTimelock();
-  await deployLendingContracts();
+  // await deployLendingContracts();
 }
 
 main()

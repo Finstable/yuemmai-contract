@@ -15,10 +15,15 @@ export const deployInterest = async () => {
   // const jumpMultiplier = "0";
   // const kink = "1";
 
-  const base = "0.063";
-  const multiplier = "0.00930000000";
-  const jumpMultiplier = "1";
-  const kink = "1";
+  // const base = "0.063";
+  // const multiplier = "0.00930000000";
+  // const jumpMultiplier = "1";
+  // const kink = "1";
+
+  const base = "0";
+  const multiplier = "0.06100000000";
+  const jumpMultiplier = "1.154";
+  const kink = "0.8";
 
   const [owner] = await getSigners();
 
