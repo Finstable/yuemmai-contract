@@ -13,7 +13,7 @@ async function main() {
   // await approveTokens();
   // await setupYESVault();
   // await addSwapLiquidity();
-  // await setupController();
+  await setupController();
 }
 
 main()

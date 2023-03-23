@@ -11,25 +11,29 @@ export const setupController = async () => {
     owner
   );
 
-  // await controller
-  //   .setPriceOracle(addressList["YESPriceOracle"])
-  //   .then((tx) => tx.wait());
-  // console.log(
-  //   "Controller connects price oracle at: ",
-  //   await controller.oracle()
-  // );
+  await controller
+    .setPriceOracle(addressList["YESPriceOracle"])
+    .then((tx) => tx.wait());
+  console.log(
+    "Controller connects price oracle at: ",
+    await controller.oracle()
+  );
 
-  // await controller.setYESVault(addressList["YESVault"]).then((tx) => tx.wait());
-  // console.log("Set YES vault to controller ", await controller.yesVault());
+  await controller.setYESVault(addressList["YESVault"]).then((tx) => tx.wait());
+  console.log("Set YES vault to controller ", await controller.yesVault());
 
-  // only test
-  // await controller
-  //   .supportMarket(addressList["KUBLending"])
-  //   .then((tx) => tx.wait());
-  // console.log("Add KUB to market");
+  await controller
+    .supportMarket(addressList["KUBLending"])
+    .then((tx) => tx.wait());
+  console.log("Add KUB to market");
 
   await controller
     .supportMarket(addressList["KUSDTLending"])
     .then((tx) => tx.wait());
   console.log("Add KUSDT to market");
+
+  await controller
+    .supportMarket(addressList["KUSDCLending"])
+    .then((tx) => tx.wait());
+  console.log("Add KUSDC to market");
 };
