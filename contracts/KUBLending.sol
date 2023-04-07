@@ -32,10 +32,10 @@ contract KUBLending is LendingContract {
         requireNoError(err, "Mint failed");
     }
 
-    function withdraw(uint256 withdrawTokens, address payable sender)
-        external
-        returns (uint256)
-    {
+    function withdraw(
+        uint256 withdrawTokens,
+        address payable sender
+    ) external returns (uint256) {
         uint256 err;
         if (msg.sender == callHelper) {
             requireKYC(sender);
@@ -54,10 +54,10 @@ contract KUBLending is LendingContract {
         return err;
     }
 
-    function withdrawUnderlying(uint256 withdrawAmount, address payable sender)
-        external
-        returns (uint256)
-    {
+    function withdrawUnderlying(
+        uint256 withdrawAmount,
+        address payable sender
+    ) external returns (uint256) {
         uint256 err;
         if (msg.sender == callHelper) {
             requireKYC(sender);
@@ -76,10 +76,10 @@ contract KUBLending is LendingContract {
         return err;
     }
 
-    function borrow(uint256 borrowAmount, address payable sender)
-        external
-        returns (uint256)
-    {
+    function borrow(
+        uint256 borrowAmount,
+        address payable sender
+    ) external returns (uint256) {
         uint256 err;
         if (msg.sender == callHelper) {
             requireKYC(sender);
@@ -194,17 +194,14 @@ contract KUBLending is LendingContract {
         return KAP20(underlyingToken).balanceOf(address(this));
     }
 
-    function doTransferInBKNext(address from, uint256 amount)
-        private
-        returns (uint256)
-    {
+    function doTransferInBKNext(
+        address from,
+        uint256 amount
+    ) private returns (uint256) {
         KAP20 token = KAP20(underlyingToken);
-        uint256 balanceBefore = token.balanceOf(
-            address(this)
-        );
+        uint256 balanceBefore = token.balanceOf(address(this));
 
-
-         _transferRouter.transferFrom(
+        _transferRouter.transferFrom(
             PROJECT,
             address(token),
             from,
@@ -217,15 +214,13 @@ contract KUBLending is LendingContract {
         return balanceAfter - balanceBefore; // underflow already checked above, just subtract
     }
 
-    function doTransferInMetamask(address from, uint256 amount)
-        private
-        returns (uint256)
-    {
+    function doTransferInMetamask(
+        address from,
+        uint256 amount
+    ) private returns (uint256) {
         require(msg.sender == from, "Sender mismatch");
 
-        uint256 balanceBefore = KAP20(underlyingToken).balanceOf(
-            address(this)
-        );
+        uint256 balanceBefore = KAP20(underlyingToken).balanceOf(address(this));
 
         uint256 kkubInput = amount - msg.value;
 
@@ -263,10 +258,10 @@ contract KUBLending is LendingContract {
         KAP20(underlyingToken).transfer(to, amount);
     }
 
-    function requireNoError(uint256 errCode, string memory message)
-        internal
-        pure
-    {
+    function requireNoError(
+        uint256 errCode,
+        string memory message
+    ) internal pure {
         if (errCode == uint256(Error.NO_ERROR)) {
             return;
         }

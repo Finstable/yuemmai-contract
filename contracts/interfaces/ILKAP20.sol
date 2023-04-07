@@ -8,9 +8,9 @@ interface ILKAP20 is ILToken {
 
     function withdraw(uint256 withdrawTokens) external returns (uint256);
 
-    function withdrawUnderlying(uint256 withdrawAmount)
-        external
-        returns (uint256);
+    function withdrawUnderlying(
+        uint256 withdrawAmount
+    ) external returns (uint256);
 
     function borrow(uint256 borrowAmount) external returns (uint256);
 

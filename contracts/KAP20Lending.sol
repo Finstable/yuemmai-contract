@@ -13,10 +13,10 @@ contract KAP20Lending is LendingContract {
 
     /*** User Interface ***/
 
-    function deposit(uint256 depositAmount, address sender)
-        external
-        returns (uint256)
-    {
+    function deposit(
+        uint256 depositAmount,
+        address sender
+    ) external returns (uint256) {
         uint256 err;
         if (msg.sender == callHelper) {
             requireKYC(sender);
@@ -36,10 +36,10 @@ contract KAP20Lending is LendingContract {
         return err;
     }
 
-    function withdraw(uint256 withdrawTokens, address payable sender)
-        external
-        returns (uint256)
-    {
+    function withdraw(
+        uint256 withdrawTokens,
+        address payable sender
+    ) external returns (uint256) {
         uint256 err;
         if (msg.sender == callHelper) {
             requireKYC(sender);
@@ -59,10 +59,10 @@ contract KAP20Lending is LendingContract {
         return err;
     }
 
-    function withdrawUnderlying(uint256 withdrawAmount, address payable sender)
-        external
-        returns (uint256)
-    {
+    function withdrawUnderlying(
+        uint256 withdrawAmount,
+        address payable sender
+    ) external returns (uint256) {
         uint256 err;
         if (msg.sender == callHelper) {
             requireKYC(sender);
@@ -81,10 +81,10 @@ contract KAP20Lending is LendingContract {
         return err;
     }
 
-    function borrow(uint256 borrowAmount, address payable sender)
-        external
-        returns (uint256)
-    {
+    function borrow(
+        uint256 borrowAmount,
+        address payable sender
+    ) external returns (uint256) {
         uint256 err;
         if (msg.sender == callHelper) {
             requireKYC(sender);
@@ -99,10 +99,10 @@ contract KAP20Lending is LendingContract {
         return err;
     }
 
-    function repayBorrow(uint256 repayAmount, address sender)
-        external
-        returns (uint256)
-    {
+    function repayBorrow(
+        uint256 repayAmount,
+        address sender
+    ) external returns (uint256) {
         uint256 err;
         if (msg.sender == callHelper) {
             requireKYC(sender);
@@ -212,10 +212,10 @@ contract KAP20Lending is LendingContract {
         }
     }
 
-    function doTransferInBKNext(address from, uint256 amount)
-        private
-        returns (uint256)
-    {
+    function doTransferInBKNext(
+        address from,
+        uint256 amount
+    ) private returns (uint256) {
         KAP20 token = KAP20(underlyingToken);
         uint256 balanceBefore = token.balanceOf(address(this));
 
@@ -232,10 +232,10 @@ contract KAP20Lending is LendingContract {
         return balanceAfter - balanceBefore; // underflow already checked above, just subtract
     }
 
-    function doTransferInMetamask(address from, uint256 amount)
-        private
-        returns (uint256)
-    {
+    function doTransferInMetamask(
+        address from,
+        uint256 amount
+    ) private returns (uint256) {
         IEIP20NonStandard token = IEIP20NonStandard(underlyingToken);
         uint256 balanceBefore = IKAP20(underlyingToken).balanceOf(
             address(this)

@@ -82,15 +82,9 @@ interface ILending {
 
     function balanceOfUnderlying(address owner) external returns (uint256);
 
-    function getAccountSnapshot(address account)
-        external
-        view
-        returns (
-            uint256,
-            uint256,
-            uint256,
-            uint256
-        );
+    function getAccountSnapshot(
+        address account
+    ) external view returns (uint256, uint256, uint256, uint256);
 
     function borrowRatePerBlock() external view returns (uint256);
 
@@ -100,10 +94,9 @@ interface ILending {
 
     function borrowBalanceCurrent(address account) external returns (uint256);
 
-    function borrowBalanceStored(address account)
-        external
-        view
-        returns (uint256);
+    function borrowBalanceStored(
+        address account
+    ) external view returns (uint256);
 
     function exchangeRateCurrent() external returns (uint256);
 
@@ -151,40 +144,40 @@ interface ILending {
 
     function _setController(address newController) external returns (uint256);
 
-    function _setPlatformReserveFactor(uint256 newReserveFactorMantissa)
-        external
-        returns (uint256);
+    function _setPlatformReserveFactor(
+        uint256 newReserveFactorMantissa
+    ) external returns (uint256);
 
-    function _setPoolReserveFactor(uint256 newReserveFactorMantissa)
-        external
-        returns (uint256);
+    function _setPoolReserveFactor(
+        uint256 newReserveFactorMantissa
+    ) external returns (uint256);
 
-    function _setInterestRateModel(address newInterestRateModel)
-        external
-        returns (uint256);
+    function _setInterestRateModel(
+        address newInterestRateModel
+    ) external returns (uint256);
 
-    function _setBeneficiary(address payable newBeneficiary)
-        external
-        returns (uint256);
+    function _setBeneficiary(
+        address payable newBeneficiary
+    ) external returns (uint256);
 
-    function _setReservePool(address payable newReservePool)
-        external
-        returns (uint256);
+    function _setReservePool(
+        address payable newReservePool
+    ) external returns (uint256);
 
-    function setTransferRouter(address newTransferRouter)
-        external
-        returns (uint256);
+    function setTransferRouter(
+        address newTransferRouter
+    ) external returns (uint256);
 
     function pause() external returns (uint256);
 
     function unpause() external returns (uint256);
 
     /*** Protocol Functions ***/
-    function _claimPoolReserves(uint256 claimedAmount)
-        external
-        returns (uint256);
+    function _claimPoolReserves(
+        uint256 claimedAmount
+    ) external returns (uint256);
 
-    function _claimPlatformReserves(uint256 claimedAmount)
-        external
-        returns (uint256);
+    function _claimPlatformReserves(
+        uint256 claimedAmount
+    ) external returns (uint256);
 }
