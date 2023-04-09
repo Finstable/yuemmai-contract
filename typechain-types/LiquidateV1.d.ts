@@ -12,7 +12,6 @@ import {
   BaseContract,
   ContractTransaction,
   Overrides,
-  PayableOverrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -22,16 +21,17 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface LiquidateV1Interface extends ethers.utils.Interface {
   functions: {
-    "KAP20liquidateBorrow(address,address,uint256,uint256,uint256,address,address)": FunctionFragment;
+    "KAP20liquidateBorrow(address,address,address,uint256,uint256,uint256,address,address)": FunctionFragment;
     "KUBLending()": FunctionFragment;
-    "KUBliquidateBorrow(uint256,uint256,uint256,address)": FunctionFragment;
     "SwapRouter()": FunctionFragment;
+    "errorCode()": FunctionFragment;
     "returnAmount()": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "KAP20liquidateBorrow",
     values: [
+      string,
       string,
       string,
       BigNumberish,
@@ -46,13 +46,10 @@ interface LiquidateV1Interface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "KUBliquidateBorrow",
-    values: [BigNumberish, BigNumberish, BigNumberish, string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "SwapRouter",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "errorCode", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "returnAmount",
     values?: undefined
@@ -63,11 +60,8 @@ interface LiquidateV1Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "KUBLending", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "KUBliquidateBorrow",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "SwapRouter", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "errorCode", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "returnAmount",
     data: BytesLike
@@ -123,6 +117,7 @@ export class LiquidateV1 extends BaseContract {
     KAP20liquidateBorrow(
       lending: string,
       toSwap: string,
+      finalToken: string,
       input: BigNumberish,
       minReward: BigNumberish,
       deadline: BigNumberish,
@@ -133,15 +128,9 @@ export class LiquidateV1 extends BaseContract {
 
     KUBLending(overrides?: CallOverrides): Promise<[string]>;
 
-    KUBliquidateBorrow(
-      input: BigNumberish,
-      minReward: BigNumberish,
-      deadline: BigNumberish,
-      borrower: string,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     SwapRouter(overrides?: CallOverrides): Promise<[string]>;
+
+    errorCode(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     returnAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
@@ -149,6 +138,7 @@ export class LiquidateV1 extends BaseContract {
   KAP20liquidateBorrow(
     lending: string,
     toSwap: string,
+    finalToken: string,
     input: BigNumberish,
     minReward: BigNumberish,
     deadline: BigNumberish,
@@ -159,15 +149,9 @@ export class LiquidateV1 extends BaseContract {
 
   KUBLending(overrides?: CallOverrides): Promise<string>;
 
-  KUBliquidateBorrow(
-    input: BigNumberish,
-    minReward: BigNumberish,
-    deadline: BigNumberish,
-    borrower: string,
-    overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   SwapRouter(overrides?: CallOverrides): Promise<string>;
+
+  errorCode(overrides?: CallOverrides): Promise<BigNumber>;
 
   returnAmount(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -175,6 +159,7 @@ export class LiquidateV1 extends BaseContract {
     KAP20liquidateBorrow(
       lending: string,
       toSwap: string,
+      finalToken: string,
       input: BigNumberish,
       minReward: BigNumberish,
       deadline: BigNumberish,
@@ -185,15 +170,9 @@ export class LiquidateV1 extends BaseContract {
 
     KUBLending(overrides?: CallOverrides): Promise<string>;
 
-    KUBliquidateBorrow(
-      input: BigNumberish,
-      minReward: BigNumberish,
-      deadline: BigNumberish,
-      borrower: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     SwapRouter(overrides?: CallOverrides): Promise<string>;
+
+    errorCode(overrides?: CallOverrides): Promise<BigNumber>;
 
     returnAmount(overrides?: CallOverrides): Promise<BigNumber>;
   };
@@ -204,6 +183,7 @@ export class LiquidateV1 extends BaseContract {
     KAP20liquidateBorrow(
       lending: string,
       toSwap: string,
+      finalToken: string,
       input: BigNumberish,
       minReward: BigNumberish,
       deadline: BigNumberish,
@@ -214,15 +194,9 @@ export class LiquidateV1 extends BaseContract {
 
     KUBLending(overrides?: CallOverrides): Promise<BigNumber>;
 
-    KUBliquidateBorrow(
-      input: BigNumberish,
-      minReward: BigNumberish,
-      deadline: BigNumberish,
-      borrower: string,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     SwapRouter(overrides?: CallOverrides): Promise<BigNumber>;
+
+    errorCode(overrides?: CallOverrides): Promise<BigNumber>;
 
     returnAmount(overrides?: CallOverrides): Promise<BigNumber>;
   };
@@ -231,6 +205,7 @@ export class LiquidateV1 extends BaseContract {
     KAP20liquidateBorrow(
       lending: string,
       toSwap: string,
+      finalToken: string,
       input: BigNumberish,
       minReward: BigNumberish,
       deadline: BigNumberish,
@@ -241,15 +216,9 @@ export class LiquidateV1 extends BaseContract {
 
     KUBLending(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    KUBliquidateBorrow(
-      input: BigNumberish,
-      minReward: BigNumberish,
-      deadline: BigNumberish,
-      borrower: string,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     SwapRouter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    errorCode(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     returnAmount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };

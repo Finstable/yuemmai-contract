@@ -108,7 +108,7 @@ export class ILendingLiquidate extends BaseContract {
       borrower: string,
       sender: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
   };
 
   filters: {};

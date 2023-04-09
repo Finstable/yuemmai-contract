@@ -39,13 +39,7 @@ const _abi = [
       },
     ],
     name: "liquidateBorrow",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [],
     stateMutability: "payable",
     type: "function",
   },

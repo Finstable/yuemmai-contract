@@ -8,5 +8,5 @@ interface ILendingLiquidate {
         uint256 deadline,
         address borrower,
         address payable sender
-    ) external payable returns (uint256);
+    ) external payable;
 }
