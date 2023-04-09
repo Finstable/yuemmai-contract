@@ -22,7 +22,6 @@ contract LiquidateV1 {
     function KAP20liquidateBorrow(
         ILKAP20Liquidate lending,
         address toSwap,
-        address finalToken,
         uint256 input,
         uint256 minReward,
         uint256 deadline,
@@ -38,7 +37,7 @@ contract LiquidateV1 {
         // this contract approve lending contract to spend input
         token.approve(address(lending), input);
         // this contract call lending contract to liquidate
-        errorCode = 0;
+        err = 0;
         if (address(lending) != KUBLending) {
             err = ILKAP20Liquidate(lending).liquidateBorrow(
                 input,
@@ -49,7 +48,8 @@ contract LiquidateV1 {
             );
             errorCode = err;
         } else {
-            KKUBliquidateBorrow(input, minReward, deadline, borrower);
+            KKUBliquidate(input, minReward, deadline, borrower);
+            errorCode = err;
         }
 
         require(err == 0, "liquidate borrow failed");
@@ -66,35 +66,24 @@ contract LiquidateV1 {
         token.approve(SwapRouter, returnAmount);
 
         // swap and transfer to liquidator
-        uint[] memory amounts = IUniswapRouter02(SwapRouter)
-            .swapExactTokensForTokens(
-                returnAmount,
-                minReward,
-                path,
-                address(this),
-                deadline
-            );
-
-        path[0] = toSwap;
-        path[1] = finalToken;
-
         IUniswapRouter02(SwapRouter).swapExactTokensForTokens(
-            amounts[1],
+            returnAmount,
             minReward,
             path,
             liquidator,
             deadline
         );
+
+        return errorCode;
     }
 
-    function KKUBliquidateBorrow(
+    function KKUBliquidate(
         uint256 input,
         uint256 minReward,
         uint256 deadline,
         address borrower
     ) internal {
-        ILendingLiquidate _KubLending = ILendingLiquidate(KUBLending);
-        ILendingLiquidate(_KubLending).liquidateBorrow(
+        ILendingLiquidate(KUBLending).liquidateBorrow(
             input,
             minReward,
             deadline,
