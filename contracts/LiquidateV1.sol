@@ -22,6 +22,7 @@ contract LiquidateV1 {
     function KAP20liquidateBorrow(
         ILKAP20Liquidate lending,
         address toSwap,
+        address finalToken,
         uint256 input,
         uint256 minReward,
         uint256 deadline,
@@ -58,22 +59,25 @@ contract LiquidateV1 {
             address(this)
         );
 
-        address[] memory path = new address[](2);
-        path[0] = lending.underlyingToken();
-        path[1] = toSwap;
+        if (token == IKAP20(finalToken)) {
+            token.transfer(liquidator, returnAmount);
+        } else {
+            address[] memory path = new address[](3);
+            path[0] = lending.underlyingToken();
+            path[1] = toSwap;
+            path[2] = finalToken;
 
-        // approve swap router to spend returnAmount
-        token.approve(SwapRouter, returnAmount);
-
-        // swap and transfer to liquidator
-        IUniswapRouter02(SwapRouter).swapExactTokensForTokens(
-            returnAmount,
-            minReward,
-            path,
-            liquidator,
-            deadline
-        );
-
+            // approve swap router to spend returnAmount
+            token.approve(SwapRouter, returnAmount);
+            // swap and transfer to liquidator
+            IUniswapRouter02(SwapRouter).swapExactTokensForTokens(
+                returnAmount,
+                minReward,
+                path,
+                liquidator,
+                deadline
+            );
+        }
         return errorCode;
     }
 
