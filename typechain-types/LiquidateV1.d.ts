@@ -21,8 +21,9 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface LiquidateV1Interface extends ethers.utils.Interface {
   functions: {
-    "KAP20liquidateBorrow(address,address,address,uint256,uint256,uint256,address,address)": FunctionFragment;
+    "KAP20liquidateBorrow((address,uint256,uint256,address,uint256,uint256,address,uint256,uint256,uint256,address,address))": FunctionFragment;
     "KUBLending()": FunctionFragment;
+    "SwapFactory()": FunctionFragment;
     "SwapRouter()": FunctionFragment;
     "errorCode()": FunctionFragment;
     "returnAmount()": FunctionFragment;
@@ -31,18 +32,28 @@ interface LiquidateV1Interface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "KAP20liquidateBorrow",
     values: [
-      string,
-      string,
-      string,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      string,
-      string
+      {
+        lending: string;
+        amountADesired: BigNumberish;
+        amountAMin: BigNumberish;
+        toSwap: string;
+        amountBDesired: BigNumberish;
+        amountBMin: BigNumberish;
+        finalToken: string;
+        input: BigNumberish;
+        minReward: BigNumberish;
+        deadline: BigNumberish;
+        borrower: string;
+        liquidator: string;
+      }
     ]
   ): string;
   encodeFunctionData(
     functionFragment: "KUBLending",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "SwapFactory",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -60,6 +71,10 @@ interface LiquidateV1Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "KUBLending", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "SwapFactory",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "SwapRouter", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "errorCode", data: BytesLike): Result;
   decodeFunctionResult(
@@ -115,18 +130,26 @@ export class LiquidateV1 extends BaseContract {
 
   functions: {
     KAP20liquidateBorrow(
-      lending: string,
-      toSwap: string,
-      finalToken: string,
-      input: BigNumberish,
-      minReward: BigNumberish,
-      deadline: BigNumberish,
-      borrower: string,
-      liquidator: string,
+      args: {
+        lending: string;
+        amountADesired: BigNumberish;
+        amountAMin: BigNumberish;
+        toSwap: string;
+        amountBDesired: BigNumberish;
+        amountBMin: BigNumberish;
+        finalToken: string;
+        input: BigNumberish;
+        minReward: BigNumberish;
+        deadline: BigNumberish;
+        borrower: string;
+        liquidator: string;
+      },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     KUBLending(overrides?: CallOverrides): Promise<[string]>;
+
+    SwapFactory(overrides?: CallOverrides): Promise<[string]>;
 
     SwapRouter(overrides?: CallOverrides): Promise<[string]>;
 
@@ -136,18 +159,26 @@ export class LiquidateV1 extends BaseContract {
   };
 
   KAP20liquidateBorrow(
-    lending: string,
-    toSwap: string,
-    finalToken: string,
-    input: BigNumberish,
-    minReward: BigNumberish,
-    deadline: BigNumberish,
-    borrower: string,
-    liquidator: string,
+    args: {
+      lending: string;
+      amountADesired: BigNumberish;
+      amountAMin: BigNumberish;
+      toSwap: string;
+      amountBDesired: BigNumberish;
+      amountBMin: BigNumberish;
+      finalToken: string;
+      input: BigNumberish;
+      minReward: BigNumberish;
+      deadline: BigNumberish;
+      borrower: string;
+      liquidator: string;
+    },
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   KUBLending(overrides?: CallOverrides): Promise<string>;
+
+  SwapFactory(overrides?: CallOverrides): Promise<string>;
 
   SwapRouter(overrides?: CallOverrides): Promise<string>;
 
@@ -157,18 +188,26 @@ export class LiquidateV1 extends BaseContract {
 
   callStatic: {
     KAP20liquidateBorrow(
-      lending: string,
-      toSwap: string,
-      finalToken: string,
-      input: BigNumberish,
-      minReward: BigNumberish,
-      deadline: BigNumberish,
-      borrower: string,
-      liquidator: string,
+      args: {
+        lending: string;
+        amountADesired: BigNumberish;
+        amountAMin: BigNumberish;
+        toSwap: string;
+        amountBDesired: BigNumberish;
+        amountBMin: BigNumberish;
+        finalToken: string;
+        input: BigNumberish;
+        minReward: BigNumberish;
+        deadline: BigNumberish;
+        borrower: string;
+        liquidator: string;
+      },
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     KUBLending(overrides?: CallOverrides): Promise<string>;
+
+    SwapFactory(overrides?: CallOverrides): Promise<string>;
 
     SwapRouter(overrides?: CallOverrides): Promise<string>;
 
@@ -181,18 +220,26 @@ export class LiquidateV1 extends BaseContract {
 
   estimateGas: {
     KAP20liquidateBorrow(
-      lending: string,
-      toSwap: string,
-      finalToken: string,
-      input: BigNumberish,
-      minReward: BigNumberish,
-      deadline: BigNumberish,
-      borrower: string,
-      liquidator: string,
+      args: {
+        lending: string;
+        amountADesired: BigNumberish;
+        amountAMin: BigNumberish;
+        toSwap: string;
+        amountBDesired: BigNumberish;
+        amountBMin: BigNumberish;
+        finalToken: string;
+        input: BigNumberish;
+        minReward: BigNumberish;
+        deadline: BigNumberish;
+        borrower: string;
+        liquidator: string;
+      },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     KUBLending(overrides?: CallOverrides): Promise<BigNumber>;
+
+    SwapFactory(overrides?: CallOverrides): Promise<BigNumber>;
 
     SwapRouter(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -203,18 +250,26 @@ export class LiquidateV1 extends BaseContract {
 
   populateTransaction: {
     KAP20liquidateBorrow(
-      lending: string,
-      toSwap: string,
-      finalToken: string,
-      input: BigNumberish,
-      minReward: BigNumberish,
-      deadline: BigNumberish,
-      borrower: string,
-      liquidator: string,
+      args: {
+        lending: string;
+        amountADesired: BigNumberish;
+        amountAMin: BigNumberish;
+        toSwap: string;
+        amountBDesired: BigNumberish;
+        amountBMin: BigNumberish;
+        finalToken: string;
+        input: BigNumberish;
+        minReward: BigNumberish;
+        deadline: BigNumberish;
+        borrower: string;
+        liquidator: string;
+      },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     KUBLending(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    SwapFactory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     SwapRouter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
