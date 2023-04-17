@@ -8,12 +8,13 @@ import { deployKAP20Lending } from "./deploy-kap20lending";
 import { deployYESLocker } from "./deploy-yes-locker";
 import { deployTimelock } from "./deploy-timelock";
 import { deployKUBLending } from "./deploy-kublending";
+import { deployYesPriceOracleV1V2 } from "./deploy-yes-priceoaclev1v2";
 
 const deployLendingContracts = async () => {
-  await deployKUBLending();
-  await deployKAP20Lending("KUSDT");
-  await deployKAP20Lending("KUSDC");
-  await deployKAP20Lending("KKUB");
+  // await deployKUBLending();
+  // await deployKAP20Lending("KUSDT");
+  // await deployKAP20Lending("KUSDC");
+  // await deployKAP20Lending("KKUB");
 };
 
 async function main() {
@@ -25,7 +26,8 @@ async function main() {
   // await deployVault();
   // await deployYESLocker();
   // await deployTimelock();
-  await deployLendingContracts();
+  // await deployLendingContracts();
+  await deployYesPriceOracleV1V2();
 }
 
 main()
