@@ -49,6 +49,10 @@ export default {
         balance: parseEther("100000000").toString(),
       })),
     },
+    kubchain_testenv: {
+      url: `https://rpc-testnet.bitkubchain.io`,
+      accounts: getAccounts(),
+    },
     kubchain_test: {
       url: `https://rpc-testnet.bitkubchain.io`,
       accounts: getAccounts(),
