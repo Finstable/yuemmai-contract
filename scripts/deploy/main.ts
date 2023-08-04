@@ -9,6 +9,7 @@ import { deployYESLocker } from "./deploy-yes-locker";
 import { deployTimelock } from "./deploy-timelock";
 import { deployKUBLending } from "./deploy-kublending";
 import { deployYesPriceOracleV1V2 } from "./deploy-yes-priceoaclev1v2";
+import { deployYesPriceOracleV1V3 } from "./deploy-yes-priceoaclev1v3";
 
 const deployLendingContracts = async () => {
   // await deployKUBLending();
@@ -27,7 +28,8 @@ async function main() {
   // await deployYESLocker();
   // await deployTimelock();
   // await deployLendingContracts();
-  await deployYesPriceOracleV1V2();
+  // await deployYesPriceOracleV1V2();
+  await deployYesPriceOracleV1V3();
 }
 
 main()

@@ -12,7 +12,7 @@ export const setupController = async () => {
   );
 
   await controller
-    .setPriceOracle(addressList["YESPriceOracleV1V2"])
+    .setPriceOracle(addressList["YESPriceOracleV1V3"])
     .then((tx) => tx.wait());
   console.log(
     "Controller connects price oracle at: ",

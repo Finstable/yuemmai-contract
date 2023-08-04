@@ -4,45 +4,41 @@ import { formatUnits } from "@ethersproject/units";
 import {
   YESPriceOracleV1V2__factory,
   YESPriceOracle__factory,
+  YESPriceOracleV1V3__factory,
 } from "../../typechain";
 
 async function main() {
   const addressList = await addressUtils.getAddressList(hre.network.name);
   const [owner] = await hre.ethers.getSigners();
 
-  const newOracle = YESPriceOracleV1V2__factory.connect(
+  const oracleV3 = YESPriceOracleV1V3__factory.connect(
+    addressList["YESPriceOracleV1V3"],
+    owner
+  );
+
+  const oracleV2 = YESPriceOracleV1V2__factory.connect(
     addressList["YESPriceOracleV1V2"],
     owner
   );
 
-  const oldPriceOracle = YESPriceOracle__factory.connect(
+  const oracleV1 = YESPriceOracle__factory.connect(
     addressList["YESPriceOracle"],
     owner
   );
 
-  const oldYesPrice = await oldPriceOracle.getYESPrice();
-  const newYesPrice = await newOracle.getYESPrice();
+  const v3YesPrice = await oracleV3.getYESPrice();
+  const v2YesPrice = await oracleV2.getYESPrice();
 
-  console.log(
-    `Token: YES, oldPrice: ${formatUnits(
-      oldYesPrice,
-      18
-    )}, newPrice: ${formatUnits(newYesPrice, 18)}`
-  );
+  console.log(`v3Price: ${formatUnits(v3YesPrice, 18)}`);
+  console.log(`v2Price: ${formatUnits(v2YesPrice, 18)}`);
 
   const tokens = ["KUSDT", "KUSDC", "KKUB"];
 
   for (let i = 0; i < tokens.length; i++) {
-    const oldPrice = await oldPriceOracle.getLatestPrice(
-      addressList[tokens[i]]
-    );
-    const newPrice = await newOracle.getLatestPrice(addressList[tokens[i]]);
-    console.log(
-      `Token: ${tokens[i]}, oldPrice: ${formatUnits(
-        oldPrice,
-        18
-      )}, newPrice: ${formatUnits(newPrice, 18)}`
-    );
+    const v2 = await oracleV2.getLatestPrice(addressList[tokens[i]]);
+    const v3 = await oracleV3.getLatestPrice(addressList[tokens[i]]);
+    console.log(`v2Price:${tokens[i]}: ${formatUnits(v2, 18)}`);
+    console.log(`v3Price:${tokens[i]}: ${formatUnits(v3, 18)}`);
   }
 }
 
