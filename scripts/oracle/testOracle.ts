@@ -32,12 +32,12 @@ async function main() {
     owner
   );
 
-  const v4YesPrice = await oracleV3.getYESPrice();
+  // const v4YesPrice = await oracleV3.getYESPrice();
   // const v3YesPrice = await oracleV3.getYESPrice();
   // const v2YesPrice = await oracleV2.getYESPrice();
   // const v1YesPrice = await oracleV1.getYESPrice();
 
-  console.log(`v4Price: ${formatUnits(v4YesPrice, 18)}`);
+  // console.log(`v4Price: ${formatUnits(v4YesPrice, 18)}`);
   // console.log(`v3Price: ${formatUnits(v3YesPrice, 18)}`);
   // console.log(`v2Price: ${formatUnits(v2YesPrice, 18)}`);
   // console.log(`v1Price: ${formatUnits(v1YesPrice, 18)}`);

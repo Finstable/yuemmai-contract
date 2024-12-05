@@ -6,7 +6,7 @@ import { formatEther } from "ethers/lib/utils";
 async function main() {
   const [signer] = await ethers.getSigners();
   const addressList = await addressUtils.getAddressList(hre.network.name);
-  const lkub = LToken__factory.connect(addressList["L-KUB"], signer);
+  const lkub = LToken__factory.connect(addressList["L-KUSDT"], signer);
 
   console.log("KYC Level", await lkub.acceptedKYCLevel());
 }

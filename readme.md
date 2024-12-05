@@ -26,6 +26,14 @@ Note: Please use NVM to downgrade Node and NPM version for convinient.
 3. Contract interaction: `npx hardhat run script scripts/<path-to-file> --network <network>`. Replace <path-to-file> with the folder and file name to run and replace <network> with the network name (see the available networks in `hardhat.config.ts` file).
 4. Contract deployment: `npx hardhat run script deploy/<path-to-file> --network <network>`. Replace <path-to-file> and <network> in the same way as the previous command.
 
+## Price oracle recovery procedure
+1. Check if BKC oracle subcription is not expired (https://www.bkcoracle.com/datafeed/view/1). Use wallet address YES Admin V1(0xfdC078e8d525c7bedb8705C7E940Ec11f1bAed78) to check.
+If the subscription is expired, get KDEV (https://console.bitkubchain.com/get-kdev) by paying some KUB with Bitkub Next wallet and transfer to a Metamask wallet. Finally, transfer to YES Admin V1 wallet to extend the subscription.
+2. Run `npx hardhat run scripts/oracle/testBKCOracle.ts --network <network>` to make sure that the service is still up (we don't know when Bitkub put this service down).
+3. Check if the oracle price index the price. Run `npx hardhat run scripts/oracle/testOracle.ts --network <network>`.
+4. If the price is not indexed, run `npx hardhat run scripts/interact/update-price.ts --network <network>` to update the price. Wait for 10 minutes for the price to be updated.
+5. Ensure that the price service is running to maintain the price in the long run.
+
 ## Related repositories
 This project contains with many pieces. Please find the source codes of those parts as follows:
 1. <a href="https://github.com/Finstable/yes-frontend" target="_blank">Frontend</a> - The main user interface for interacting with lending contracts and campaigns by YES.
